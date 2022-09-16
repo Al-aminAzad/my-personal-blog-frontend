@@ -1,21 +1,27 @@
 import * as api from '../api';
-import { FETCH_ALL,FETCH_BY_SEARCH, CREATE, UPDATE, DELETE } from '../Constants/actionTypes';
+import { FETCH_ALL,FETCH_BY_SEARCH, CREATE, UPDATE, DELETE,START_LOADING, END_LOADING } from '../Constants/actionTypes';
 
 export const getPosts = (page) => async (dispatch) => {
     try {
+        dispatch({type:START_LOADING})
         const { data } = await api.fetchPosts(page);
         dispatch({ type: FETCH_ALL, payload: data });
+        dispatch({type:END_LOADING})
     } catch (error) {
         console.log(error)
+        dispatch({type:END_LOADING})
     }
 }
 
 export const getPostBySearch = (searchQuery) => async (dispatch)=>{
     try {
+        dispatch({type:START_LOADING})
         const {data: {data}} = await api.fetchPostBySearch(searchQuery)
         dispatch({ type: FETCH_BY_SEARCH, payload: data });
+        dispatch({type:END_LOADING})
     } catch (error) {
         console.log(error)
+        dispatch({type:END_LOADING})
     }
 }
 
