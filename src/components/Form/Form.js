@@ -4,14 +4,14 @@ import FileBase from 'react-file-base64';
 import { useDispatch, useSelector } from 'react-redux';
 
 //File import
-import useStyles from './style.js'
-import { createPost, updatePost } from '../../actions/Posts'
+import useStyles from './style.js';
+import { createPost, updatePost } from '../../actions/Posts';
 const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '' });
   const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
-  const user = JSON.parse(localStorage.getItem('profile'))
+  const user = JSON.parse(localStorage.getItem('profile'));
   const handleSubmit = (e) => {
     e.preventDefault();
     if (currentId) {

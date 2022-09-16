@@ -1,4 +1,4 @@
-import { FETCH_ALL, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, START_LOADING, END_LOADING } from '../Constants/actionTypes';
+import { FETCH_ALL, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, START_LOADING, END_LOADING, FETCH_POST } from '../Constants/actionTypes';
 
 const INITIAL_STATE = {
     posts: [],
@@ -18,6 +18,11 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 posts: action.payload
             };
+        case FETCH_POST:
+            return{
+                ...state,
+                post: action.payload
+            }
         case START_LOADING:
             return {
                 ...state,
