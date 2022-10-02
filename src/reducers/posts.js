@@ -1,4 +1,4 @@
-import { FETCH_ALL, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, START_LOADING, END_LOADING, FETCH_POST } from '../Constants/actionTypes';
+import { FETCH_ALL, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, START_LOADING, END_LOADING, FETCH_POST, COMMENT } from '../Constants/actionTypes';
 
 const INITIAL_STATE = {
     posts: [],
@@ -47,6 +47,16 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 posts: state.posts.filter(post => post._id !== action.payload)
+            }
+        case COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map(post=>{
+                    if(post._id === action.payload._id){
+                        return action.payload
+                    }
+                    return post;
+                })
             }
         default:
             return state;
