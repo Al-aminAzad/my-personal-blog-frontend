@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 //File import
 import Navbar from './components/Navbar/Navbar';
@@ -11,6 +12,7 @@ import PostDetails from './components/PostDetails/PostDetails'
 function App() {
   const user = JSON.parse(localStorage.getItem('profile'))
   return (
+    <GoogleOAuthProvider clientId={`${process.env.REACT_APP_CLIENT_ID}`}>
     <BrowserRouter>
       <Container maxWidth='xl' >
         <Navbar />
@@ -23,7 +25,7 @@ function App() {
         </Switch>
       </Container>
     </BrowserRouter>
-
+    </GoogleOAuthProvider>
   );
 }
 

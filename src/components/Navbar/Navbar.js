@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@material-ui/core';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { googleLogout } from '@react-oauth/google';
 import decode from 'jwt-decode';
 
 //File import
@@ -15,6 +16,7 @@ const Navbar = () => {
     const location =  useLocation();
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
     const logOut = () => {
+        googleLogout()
         dispatch({type:'LOGOUT'})
         setUser(null)
         history.push('/')
@@ -31,13 +33,13 @@ const Navbar = () => {
     return (
         <AppBar className={classes.appBar} position='static' color='inherit' >
             <div className={classes.brandContainer}>
-                <Typography className={classes.heading} component={Link} to='/' variant='h2' align='center' >Memories</Typography>
+                <Typography className={classes.heading} component={Link} to='/' variant='h2' align='center' >My Blogs</Typography>
                 <img className={classes.image} src={memories} alt="memories" height='60' />
             </div>
             <Toolbar>
                 {user ? (
                     <div className={classes.profile}>
-                        <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl} >{user.result.name.charAt(0)}</Avatar>
+                        <Avatar className={classes.purple} alt={user.result.name} referrerPolicy="no-referrer" src={user.result.imageUrl} >{user.result.name.charAt(0)}</Avatar>
                         <Typography className={classes.userName} variant='h6'>{user.result.name}</Typography>
                         <Button className={classes.logout} variant='contained' color='secondary' onClick={logOut} >Logout</Button>
                     </div>

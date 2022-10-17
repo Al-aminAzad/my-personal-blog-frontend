@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Avatar, Container, Paper, Typography, Grid, Button } from '@material-ui/core';
+import { Avatar, Container, Paper, Typography, Grid, Button, Box } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin } from '@react-oauth/google';
+import jwtDecode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -12,10 +13,10 @@ import Icon from './icon';
 import { signin, signup } from '../../actions/Auth.js';
 
 const initialState = {
-    firstName : '',
-    lastName : '',
+    firstName: '',
+    lastName: '',
     email: '',
-    password:'',
+    password: '',
     confirmPassword: ''
 }
 const Auth = () => {
@@ -26,15 +27,15 @@ const Auth = () => {
     const [isSignup, setIsSignUp] = useState(false);
     const [formData, setFormData] = useState(initialState)
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
-    const handleChange = (e) => { 
-        setFormData({...formData, [e.target.name]:e.target.value })
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     };
-    const handleSubmit = (e) => { 
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if(isSignup){
-            dispatch(signup(formData,history));
-        }else{
-            dispatch(signin(formData,history));
+        if (isSignup) {
+            dispatch(signup(formData, history));
+        } else {
+            dispatch(signin(formData, history));
         }
     };
     const switchMode = () => {
@@ -42,14 +43,24 @@ const Auth = () => {
         setShowPassword(false)
     }
     const googleSuccess = async (res) => {
-        const result = res?.profileObj;
-        const token = res?.tokenId;
+        const decoded = jwtDecode(res.credential)
+        const { name, picture,email, sub } = decoded
+        const result = {
+            _id: sub,
+            _type: 'user',
+            name,
+            email,
+            imageUrl: picture
+        }
+        // const result = res?.profileObj;
+        const token = res?.credential;
         try {
             dispatch({ type: 'AUTH', data: { result, token } })
             history.push('/')
         } catch (error) {
             console.log(error)
         }
+        // console.log(decoded)
     }
     const googleError = (error) => {
         console.log(error)
@@ -79,22 +90,15 @@ const Auth = () => {
                     <Button type='submit' className={classes.submit} variant='contained' color='primary' fullWidth >
                         {isSignup ? 'Sign up' : 'Sign in'}
                     </Button>
+                    <Box display='flex' alignItems='center' justifyContent='center' >
                     <GoogleLogin
-                        clientId='874331961685-mb1gn9hfrkdbj3l74ro5neq5260k4ptb.apps.googleusercontent.com'
-                        render={renderProps => (
-                            <Button
-                                className={classes.googleButton}
-                                color='primary'
-                                fullWidth
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                startIcon={<Icon />}
-                                variant='contained' >Google Sign In</Button>
-                        )}
                         onSuccess={googleSuccess}
-                        onFailure={googleError}
+                        onError={googleError}
                         cookiePolicy={"single_host_origin"}
+                        size='large'
+                        
                     />
+                    </Box>
                     <Grid container justifyContent='flex-end' >
                         <Grid item>
                             <Button onClick={switchMode} >
